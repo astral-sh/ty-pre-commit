@@ -1,6 +1,6 @@
 [project]
-name = "ruff-pre-commit"
+name = "ty-pre-commit"
 version = "0.0.0"
 dependencies = [
-    "ruff==0.14.9",
+    "ty==0.0.2",
 ]
