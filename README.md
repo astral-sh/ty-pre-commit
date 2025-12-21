@@ -1,9 +1,9 @@
 # ty-pre-commit
 
 [![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v2.json)](https://github.com/astral-sh/ty)
-[![image](https://img.shields.io/pypi/v/ty/0.0.4.svg)](https://pypi.python.org/pypi/ty)
-[![image](https://img.shields.io/pypi/l/ty/0.0.4.svg)](https://pypi.python.org/pypi/ty)
-[![image](https://img.shields.io/pypi/pyversions/ty/0.0.4.svg)](https://pypi.python.org/pypi/ty)
+[![image](https://img.shields.io/pypi/v/ty/0.0.5.svg)](https://pypi.python.org/pypi/ty)
+[![image](https://img.shields.io/pypi/l/ty/0.0.5.svg)](https://pypi.python.org/pypi/ty)
+[![image](https://img.shields.io/pypi/pyversions/ty/0.0.5.svg)](https://pypi.python.org/pypi/ty)
 [![Actions status](https://github.com/astral-sh/ty-pre-commit/workflows/main/badge.svg)](https://github.com/astral-sh/ty-pre-commit/actions)
 
 A [pre-commit](https://pre-commit.com/) hook for [ty](https://github.com/astral-sh/ty).
@@ -19,7 +19,7 @@ To run ty's [type checker](https://docs.astral.sh/ty) via pre-commit, add the fo
 repos:
 - repo: https://github.com/astral-sh/ty-pre-commit
   # ty version.
-  rev: v0.0.4
+  rev: v0.0.5
   hooks:
     # Run the type checker.
     - id: ty
