@@ -1,10 +1,30 @@
 - id: ty
   name: ty
   description: "Run 'ty' for extremely fast Python type checking"
-  entry: ty check --ignore-active-virtual-env
+  entry: ty check
   language: python
-  types: [python]
+  types: [python, pyi, jupyter]
   args: []
+
+  # Check the whole project instead of appending matching filenames to the command.
+  #
+  # Exactly which files ty should emit diagnostics on can be configured using
+  # the ty configuration file. Changes in file `b.py` can cause new diagnostics to
+  # appear in `a.py`, so passing only `b.py` as a positional argument to `ty check`
+  # if only `b.py` changed would give a false sense of security regarding whether
+  # the code still type-checks.
+  pass_filenames: false
+
+  # Run even when no files match, including deletion-only commits, since the
+  # deletion of `b.py` could cause new diagnostics in `a.py`.
+  #
+  # This setting means that the hook will run even on commits that have no Python
+  # files added/changed/deleted in them, but there's no way of "only running on
+  # Python commits" without also excluding deletion-only commits.
+  always_run: true
+
+  # Execute this hook using one process instead of pre-commit's parallel execution.
   require_serial: true
+
   additional_dependencies: []
   minimum_pre_commit_version: "2.9.2"
