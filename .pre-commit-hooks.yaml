@@ -3,7 +3,7 @@
   description: "Run 'ty' for extremely fast Python type checking"
   entry: ty check
   language: python
-  types: [python, pyi]
+  types: [python, pyi, jupyter]
   args: []
 
   # Check the whole project instead of appending matching filenames to the command.
