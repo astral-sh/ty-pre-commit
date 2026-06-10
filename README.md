@@ -44,7 +44,7 @@ hooks = [
 
 By default, the `ty` hook uses uv's normal behavior with regards to locking and synchronizing projects. The hook's default behavior may therefore create or update a `uv.lock` file, create a local virtual environment if one does not exist, and/or install or update dependencies into a local virtual environment.
 
-However, the `ty` hook accepts all additional arguments accepted by [`uv check`]((https://docs.astral.sh/uv/reference/cli/#uv-check)). If you do not want the hook to create or update your project's uv lockfile or local virtual environment, use uv's isolated mode:
+However, the `ty` hook accepts all additional arguments accepted by [`uv check`](https://docs.astral.sh/uv/reference/cli/#uv-check). If you do not want the hook to create or update your project's uv lockfile or local virtual environment, use uv's isolated mode:
 
 ```yaml
 hooks:
