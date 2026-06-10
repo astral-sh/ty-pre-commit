@@ -9,65 +9,82 @@
 
 import re
 import subprocess
-import tomllib
 import typing
+from datetime import datetime
 from pathlib import Path
 
 import urllib3
-from packaging.requirements import Requirement
 from packaging.version import Version
 
 
 def main():
-    with open(Path(__file__).parent / "pyproject.toml", "rb") as f:
-        pyproject = tomllib.load(f)
+    ty_releases = get_releases(package="ty")
+    current_ty_version = get_current_ty_version()
+    target_versions = sorted(v for v in ty_releases if v > current_ty_version)
+    if not target_versions:
+        return
 
-    all_versions = get_all_versions()
-    current_version = get_current_version(pyproject=pyproject)
-    target_versions = [v for v in all_versions if v > current_version]
+    uv_releases = get_releases(package="uv")
 
-    for version in target_versions:
-        paths = process_version(version)
+    for ty_version in target_versions:
+        uv_version = get_latest_version(
+            releases=uv_releases, released_at=ty_releases[ty_version]
+        )
+        paths = process_version(ty_version=ty_version, uv_version=uv_version)
         if subprocess.check_output(["git", "status", "-s"]).strip():
             subprocess.run(["git", "add", *paths], check=True)
-            subprocess.run(["git", "commit", "-m", f"Mirror: {version}"], check=True)
-            subprocess.run(["git", "tag", f"v{version}"], check=True)
+            subprocess.run(["git", "commit", "-m", f"Mirror: {ty_version}"], check=True)
+            subprocess.run(["git", "tag", f"v{ty_version}"], check=True)
         else:
-            print(f"No change v{version}")
+            print(f"No change v{ty_version}")
 
 
-def get_all_versions() -> list[Version]:
-    response = urllib3.request("GET", "https://pypi.org/pypi/ty/json")
+def get_releases(package: str) -> dict[Version, datetime]:
+    response = urllib3.request("GET", f"https://pypi.org/pypi/{package}/json")
     if response.status != 200:
-        raise RuntimeError("Failed to fetch versions from pypi")
+        raise RuntimeError(f"Failed to fetch {package} versions from PyPI")
 
-    versions = [Version(release) for release in response.json()["releases"]]
-    return sorted(versions)
-
-
-def get_current_version(pyproject: dict) -> Version:
-    requirements = [Requirement(d) for d in pyproject["project"]["dependencies"]]
-    requirement = next((r for r in requirements if r.name == "ty"), None)
-    assert requirement is not None, "pyproject.toml does not have ty requirement"
-
-    specifiers = list(requirement.specifier)
-    assert (
-        len(specifiers) == 1 and specifiers[0].operator == "=="
-    ), f"ty's specifier should be exact matching, but `{requirement}`"
-
-    return Version(specifiers[0].version)
+    releases = {}
+    for version, files in response.json()["releases"].items():
+        if files:
+            releases[Version(version)] = min(
+                datetime.fromisoformat(file["upload_time_iso_8601"]) for file in files
+            )
+    return releases
 
 
-def process_version(version: Version) -> typing.Sequence[str]:
+def get_latest_version(
+    releases: dict[Version, datetime], released_at: datetime
+) -> Version:
+    return max(
+        version
+        for version, release_time in releases.items()
+        if release_time <= released_at
+    )
+
+
+def get_current_ty_version() -> Version:
+    content = (Path(__file__).parent / ".pre-commit-hooks.yaml").read_text()
+    versions = set(re.findall(r"--ty-version=(\S+)", content))
+    assert len(versions) == 1, ".pre-commit-hooks.yaml does not have one ty version"
+    return Version(versions.pop())
+
+
+def process_version(ty_version: Version, uv_version: Version) -> typing.Sequence[str]:
     def replace_pyproject_toml(content: str) -> str:
-        return re.sub(r'"ty==.*"', f'"ty=={version}"', content)
+        return re.sub(r'"uv==.*"', f'"uv=={uv_version}"', content)
+
+    def replace_pre_commit_hooks_yaml(content: str) -> str:
+        return re.sub(r"--ty-version=\S+", f"--ty-version={ty_version}", content)
 
     def replace_readme_md(content: str) -> str:
-        content = re.sub(r"rev: v\d+\.\d+\.\d+", f"rev: v{version}", content)
-        return re.sub(r"/ty/\d+\.\d+\.\d+\.svg", f"/ty/{version}.svg", content)
+        content = re.sub(r"rev: v\d+\.\d+\.\d+", f"rev: v{ty_version}", content)
+        content = re.sub(r'rev = "v\d+\.\d+\.\d+"', f'rev = "v{ty_version}"', content)
+        return re.sub(r"/ty/\d+\.\d+\.\d+\.svg", f"/ty/{ty_version}.svg", content)
 
     paths = {
         "pyproject.toml": replace_pyproject_toml,
+        ".pre-commit-hooks.yaml": replace_pre_commit_hooks_yaml,
         "README.md": replace_readme_md,
     }
 
