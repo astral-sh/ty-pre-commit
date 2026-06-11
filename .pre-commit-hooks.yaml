@@ -3,7 +3,7 @@
   description: "Run 'ty' for extremely fast Python type checking"
   entry: uv check --quiet --preview-features=check-command --ty-version=0.0.48
   language: python
-  types: [python, pyi, jupyter]
+  types_or: [python, pyi, jupyter]
   args: []
 
   # Check the whole project instead of appending matching filenames to the command.
