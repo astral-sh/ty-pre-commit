@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: "0 */4 * * *"
   workflow_dispatch:
+    inputs:
+      version:
+        description: ty version to mirror
+        required: false
+        type: string
 
 permissions: {}
 
@@ -26,6 +31,8 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - run: uv run --no-project mirror.py
+        env:
+          TY_VERSION: ${{ inputs.version }}
 
       - name: check for unpushed commits
         id: check_unpushed
