@@ -7,6 +7,7 @@
 # ///
 """Update ty-pre-commit to the latest version of ty."""
 
+import os
 import re
 import subprocess
 import typing
@@ -18,18 +19,28 @@ from packaging.version import Version
 
 
 def main():
-    ty_releases = get_releases(package="ty")
     current_ty_version = get_current_ty_version()
-    target_versions = sorted(v for v in ty_releases if v > current_ty_version)
+    dispatched_version = os.environ.get("TY_VERSION")
+    if dispatched_version:
+        ty_releases = None
+        target_versions = [Version(dispatched_version)]
+    else:
+        ty_releases = get_releases(package="ty")
+        target_versions = list(ty_releases)
+
+    target_versions = sorted(v for v in target_versions if v > current_ty_version)
     if not target_versions:
         return
 
     uv_releases = get_releases(package="uv")
 
     for ty_version in target_versions:
-        uv_version = get_latest_version(
-            releases=uv_releases, released_at=ty_releases[ty_version]
-        )
+        if ty_releases is None:
+            uv_version = max(uv_releases)
+        else:
+            uv_version = get_latest_version(
+                releases=uv_releases, released_at=ty_releases[ty_version]
+            )
         paths = process_version(ty_version=ty_version, uv_version=uv_version)
         if subprocess.check_output(["git", "status", "-s"]).strip():
             subprocess.run(["git", "add", *paths], check=True)
