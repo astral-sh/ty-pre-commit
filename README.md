@@ -98,6 +98,37 @@ hooks:
 
 See [the `uv check` reference documentation](https://docs.astral.sh/uv/reference/cli/#uv-check) for a full list of supported flags.
 
+## Using ty in network-restricted CI environments
+
+The `ty` hook runs `uv check`, which downloads the requested ty binary from GitHub Releases at run time. This means the hook requires network access the first time a given ty version is used.
+
+As a result, this hook does not currently work on [pre-commit.ci](https://pre-commit.ci/) or other CI runners that block network access while hooks run. Passing `--offline` only works when the exact ty version and all project dependencies are already available in uv's local cache. It does not make a fresh CI runner populate that cache.
+
+If you want pre-commit.ci-style autofixes on a CI runner that allows network access, install the [pre-commit-ci-lite GitHub App](https://github.com/apps/pre-commit-ci-lite/installations/new), then run [`pre-commit/action`](https://github.com/pre-commit/action) or [`j178/prek-action`](https://github.com/j178/prek-action) before [`pre-commit-ci/lite-action`](https://github.com/pre-commit-ci/lite-action). For example:
+
+```yaml
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - uses: pre-commit/action@v3.0.1
+      # If you use prek instead of pre-commit, replace the previous step with:
+      # - uses: j178/prek-action@v2
+      - uses: pre-commit-ci/lite-action@v1.1.0
+        if: always()
+```
+
 ## License
 
 ty-pre-commit is licensed under either of
