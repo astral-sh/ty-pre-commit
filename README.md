@@ -98,6 +98,59 @@ hooks:
 
 See [the `uv check` reference documentation](https://docs.astral.sh/uv/reference/cli/#uv-check) for a full list of supported flags.
 
+## Running pre-commit in CI with ty-pre-commit
+
+ty-pre-commit works well with a variety of pre-commit/prek runners in CI. For GitHub Actions, any of the following example jobs should invoke the hook without issue:
+
+```yaml
+pre-commit-action:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout
+    - uses: actions/setup-python
+    - uses: pre-commit/action
+
+prek-action:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout
+    - uses: j178/prek-action
+
+pre-commit-standalone:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout
+    - uses: astral-sh/setup-uv
+    - run: uvx pre-commit run --all-files
+
+prek-standalone:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout
+    - uses: astral-sh/setup-uv
+    - run: uvx prek run --all-files
+```
+
+Any of the above can also be combined with [`pre-commit-ci-lite`](https://pre-commit.ci/lite) to enable autofixes to be pushed to PRs.
+
+Unfortunately, ty-pre-commit does not work with the [pre-commit.ci](https://pre-commit.ci/) runner. ty-pre-commit requires network access, which is [disabled](https://github.com/pre-commit-ci/issues/issues/47#issuecomment-804481763) by pre-commit.ci during invocation of hooks. If you use pre-commit.ci as your pre-commit runner in CI, we recommend adding this to your `.pre-commit-config.yaml` file:
+
+```yaml
+ci:
+  skip: [ty]
+```
+
+and then invoking ty separately in CI -- for example, in GitHub Actions:
+
+```yaml
+ty:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout
+    - uses: astral-sh/setup-uv
+    - run: uv check
+```
+
 ## License
 
 ty-pre-commit is licensed under either of
