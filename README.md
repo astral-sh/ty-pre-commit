@@ -106,28 +106,28 @@ ty-pre-commit works well with a variety of pre-commit/prek runners in CI. For Gi
 pre-commit-action:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout
-    - uses: actions/setup-python
-    - uses: pre-commit/action
+    - uses: actions/checkout@v6.0.3
+    - uses: actions/setup-python@v6.2.0
+    - uses: pre-commit/action@v3.0.1
 
 prek-action:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout
-    - uses: j178/prek-action
+    - uses: actions/checkout@v6.0.3
+    - uses: j178/prek-action@v2.0.4
 
 pre-commit-standalone:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout
-    - uses: astral-sh/setup-uv
+    - uses: actions/checkout@v6.0.3
+    - uses: astral-sh/setup-uv@v8.2.0
     - run: uvx pre-commit run --all-files
 
 prek-standalone:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout
-    - uses: astral-sh/setup-uv
+    - uses: actions/checkout@v6.0.3
+    - uses: astral-sh/setup-uv@v8.2.0
     - run: uvx prek run --all-files
 ```
 
@@ -140,15 +140,15 @@ ci:
   skip: [ty]
 ```
 
-and then invoking ty separately in CI -- for example, in GitHub Actions:
+and then invoking ty separately in CI -- for example, in GitHub Actions, assuming you have ty pinned in your `pyproject.toml` file:
 
 ```yaml
 ty:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout
-    - uses: astral-sh/setup-uv
-    - run: uv check
+    - uses: actions/checkout@v6.0.3
+    - uses: astral-sh/setup-uv@v8.2.0
+    - run: uv run ty check
 ```
 
 ## License
