@@ -1,7 +1,7 @@
 - id: ty
   name: ty
   description: "Run 'ty' for extremely fast Python type checking"
-  entry: uv check --quiet --preview-features=check-command --ty-version=0.0.53
+  entry: uv check --quiet --preview-features=check-command --ty-version=0.0.54
   language: python
   types_or: [python, pyi, jupyter]
   args: []
