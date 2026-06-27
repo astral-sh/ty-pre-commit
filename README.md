@@ -1,9 +1,9 @@
 # ty-pre-commit
 
 [![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
-[![PyPI version](https://img.shields.io/pypi/v/ty/0.0.54.svg)](https://pypi.python.org/pypi/ty)
-[![License](https://img.shields.io/pypi/l/ty/0.0.54.svg)](https://pypi.python.org/pypi/ty)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/ty/0.0.54.svg)](https://pypi.python.org/pypi/ty)
+[![PyPI version](https://img.shields.io/pypi/v/ty/0.0.55.svg)](https://pypi.python.org/pypi/ty)
+[![License](https://img.shields.io/pypi/l/ty/0.0.55.svg)](https://pypi.python.org/pypi/ty)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/ty/0.0.55.svg)](https://pypi.python.org/pypi/ty)
 [![Actions status](https://github.com/astral-sh/ty-pre-commit/workflows/main/badge.svg)](https://github.com/astral-sh/ty-pre-commit/actions)
 
 A [pre-commit](https://pre-commit.com/) hook for running [ty](https://github.com/astral-sh/ty) quickly over your whole Python project.
@@ -22,7 +22,7 @@ To run ty via pre-commit, add the following to your `.pre-commit-config.yaml`:
 repos:
 - repo: https://github.com/astral-sh/ty-pre-commit
   # ty version.
-  rev: v0.0.54
+  rev: v0.0.55
   hooks:
     - id: ty
 ```
@@ -34,7 +34,7 @@ If you prefer using [prek](https://github.com/j178/prek) instead of pre-commit, 
 ```toml
 [[repos]]
 repo = "https://github.com/astral-sh/ty-pre-commit"
-rev = "v0.0.54" # ty version.
+rev = "v0.0.55" # ty version.
 hooks = [
   { id = "ty" },
 ]
