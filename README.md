@@ -1,9 +1,9 @@
 # ty-pre-commit
 
 [![ty](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ty/main/assets/badge/v0.json)](https://github.com/astral-sh/ty)
-[![PyPI version](https://img.shields.io/pypi/v/ty/0.0.61.svg)](https://pypi.python.org/pypi/ty)
-[![License](https://img.shields.io/pypi/l/ty/0.0.61.svg)](https://pypi.python.org/pypi/ty)
-[![Supported Python versions](https://img.shields.io/pypi/pyversions/ty/0.0.61.svg)](https://pypi.python.org/pypi/ty)
+[![PyPI version](https://img.shields.io/pypi/v/ty/0.0.62.svg)](https://pypi.python.org/pypi/ty)
+[![License](https://img.shields.io/pypi/l/ty/0.0.62.svg)](https://pypi.python.org/pypi/ty)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/ty/0.0.62.svg)](https://pypi.python.org/pypi/ty)
 [![Actions status](https://github.com/astral-sh/ty-pre-commit/workflows/main/badge.svg)](https://github.com/astral-sh/ty-pre-commit/actions)
 
 A [pre-commit](https://pre-commit.com/) hook for running [ty](https://github.com/astral-sh/ty) quickly over your whole Python project.
@@ -22,7 +22,7 @@ To run ty via pre-commit, add the following to your `.pre-commit-config.yaml`:
 repos:
 - repo: https://github.com/astral-sh/ty-pre-commit
   # ty version.
-  rev: v0.0.61
+  rev: v0.0.62
   hooks:
     - id: ty
 ```
@@ -34,7 +34,7 @@ If you prefer using [prek](https://github.com/j178/prek) instead of pre-commit, 
 ```toml
 [[repos]]
 repo = "https://github.com/astral-sh/ty-pre-commit"
-rev = "v0.0.61" # ty version.
+rev = "v0.0.62" # ty version.
 hooks = [
   { id = "ty" },
 ]
@@ -106,28 +106,28 @@ ty-pre-commit works well with a variety of pre-commit/prek runners in CI. For Gi
 pre-commit-action:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: actions/setup-python@v6.3.0
+    - uses: actions/checkout@v7.0.1
+    - uses: actions/setup-python@v7.0.0
     - uses: pre-commit/action@v3.0.1
 
 prek-action:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: j178/prek-action@v2.0.5
+    - uses: actions/checkout@v7.0.1
+    - uses: j178/prek-action@v2.0.6
 
 pre-commit-standalone:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: astral-sh/setup-uv@v8.3.2
+    - uses: actions/checkout@v7.0.1
+    - uses: astral-sh/setup-uv@v9.0.0
     - run: uvx pre-commit run --all-files
 
 prek-standalone:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: astral-sh/setup-uv@v8.3.2
+    - uses: actions/checkout@v7.0.1
+    - uses: astral-sh/setup-uv@v9.0.0
     - run: uvx prek run --all-files
 ```
 
@@ -146,8 +146,8 @@ and then invoking ty separately in CI -- for example, in GitHub Actions, assumin
 ty:
   runs-on: ubuntu-latest
   steps:
-    - uses: actions/checkout@v7.0.0
-    - uses: astral-sh/setup-uv@v8.3.2
+    - uses: actions/checkout@v7.0.1
+    - uses: astral-sh/setup-uv@v9.0.0
     - run: uv run ty check
 ```
 
