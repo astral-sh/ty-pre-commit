@@ -1,0 +1,54 @@
+# Hooks with the same priority will be run concurrently by `prek`.
+#
+# Priority 0 is read-only hooks, and hooks that modify disjoint file types.
+# Priority 1 includes some lint-autofix hooks
+
+repos:
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+        priority: 0
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 6b63472e72e1a91ed8a2f6d483790dfb644fa1d3 # frozen: 0.37.4
+    hooks:
+      - id: check-github-workflows
+        priority: 0
+  # `actionlint` hook, for verifying correct syntax in GitHub Actions workflows.
+  - repo: https://github.com/rhysd/actionlint
+    rev: 914e7df21a07ef503a81201c76d2b11c789d3fca # frozen: v1.7.12
+    hooks:
+      - id: actionlint
+        additional_dependencies:
+          # actionlint has a shellcheck integration which extracts shell scripts in `run:` steps from GitHub Actions
+          # and checks these with shellcheck. This is arguably its most useful feature,
+          # but the integration only works if shellcheck is installed.
+          #
+          # NOTE: if this is pinned to an exact hash, renovate won't update it as of 2026-07-06;
+          # it will only update the version if the tag is understood as a valid Go version.
+          # Pinning to an exact hash is also less important for a go dependency anyway;
+          # Go has better protections against mutable tags than the Python ecosystem, for example:
+          # https://go.dev/blog/supply-chain
+          - "github.com/wasilibs/go-shellcheck/cmd/shellcheck@v0.11.1"
+        language: golang # means renovate will also update `additional_dependencies`
+        priority: 0
+  # zizmor detects security vulnerabilities in GitHub Actions workflows.
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: 451b56af716f9f0d0c2b816503a3fd0cf8b036fa # frozen: v1.29.0
+    hooks:
+      - id: zizmor
+        priority: 0
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
+    hooks:
+      - id: check-yaml
+        priority: 0
+      - id: check-toml
+        priority: 0
+      - id: check-merge-conflict
+        priority: 0
+      - id: check-case-conflict
+        priority: 0
+      - id: end-of-file-fixer
+        priority: 0
+      - id: trailing-whitespace
+        priority: 1
