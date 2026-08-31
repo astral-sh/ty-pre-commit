@@ -1,6 +1,10 @@
 [project]
 name = "ty-pre-commit"
+requires-python = ">=3.8"
 version = "0.0.0"
 dependencies = [
     "uv==0.12.7",
 ]
+
+[dependency-groups]
+dev = ["prek"]
