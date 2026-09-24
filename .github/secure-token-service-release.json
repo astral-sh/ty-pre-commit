@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "repositories": {
+    "ty-pre-commit": {
+      "name": "astral-sh/ty-pre-commit",
+      "id": 1118480211,
+      "oidc_subject": "legacy"
+    },
+    "ty": {
+      "name": "astral-sh/ty",
+      "id": 976731654,
+      "oidc_subject": "legacy"
+    }
+  },
+  "rules": [
+    {
+      "caller": "ty",
+      "environment": "release",
+      "caller_workflow": "release.yml",
+      "reusable_workflow": "notify-dependents.yml",
+      "on": ["workflow_dispatch"],
+      "permissions": { "actions": "write" },
+      "target": "ty-pre-commit"
+    }
+  ]
+}
