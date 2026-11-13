@@ -1,5 +1,6 @@
 [project]
 name = "ty-pre-commit"
+requires-python = ">=3.8"
 version = "0.0.0"
 dependencies = [
     "uv==0.13.8",
@@ -42,3 +43,6 @@ build-constraint-dependencies = [
         "sha256:94800765601e9171bf5d58d066e640662842bcedcbab982b2c90787a2c987322",
     ] },
 ]
+
+[dependency-groups]
+dev = ["prek"]
